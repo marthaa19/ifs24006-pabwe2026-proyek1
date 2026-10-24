@@ -2,13 +2,12 @@ import { lazy, Suspense } from 'react';
 import { NavLink, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 import Beranda from './pages/Beranda.jsx';
+import { Masuk, Daftar } from './pages/Auth.jsx';
 
-// Halaman selain Beranda dimuat saat dibutuhkan (code splitting) agar JavaScript awal lebih kecil.
+// Beranda dan halaman Masuk/Daftar langsung dimuat; halaman lain dimuat saat dibutuhkan (code splitting) agar JavaScript awal lebih kecil.
 const Detail = lazy(() => import('./pages/Detail.jsx'));
 const FormLomba = lazy(() => import('./pages/FormLomba.jsx'));
 const Tersimpan = lazy(() => import('./pages/Tersimpan.jsx'));
-const Masuk = lazy(() => import('./pages/Auth.jsx').then((m) => ({ default: m.Masuk })));
-const Daftar = lazy(() => import('./pages/Auth.jsx').then((m) => ({ default: m.Daftar })));
 
 function Logo() {
   return (
@@ -24,7 +23,14 @@ function Logo() {
 function Wajib({ children }) {
   const { user, siap } = useAuth();
   const lokasi = useLocation();
-  if (!siap) return <p className="notice">Memuat…</p>;
+  if (!siap) {
+    return (
+      <>
+        <h1 className="visually-hidden">Memuat halaman</h1>
+        <p className="notice">Memuat…</p>
+      </>
+    );
+  }
   if (!user) return <Navigate to="/masuk" replace state={{ dari: lokasi.pathname }} />;
   return children;
 }
@@ -77,7 +83,14 @@ export default function App() {
         </div>
       </header>
       <main className="container">
-        <Suspense fallback={<p className="notice" role="status">Memuat…</p>}>
+        <Suspense
+          fallback={
+            <>
+              <h1 className="visually-hidden">Memuat halaman</h1>
+              <p className="notice" role="status">Memuat…</p>
+            </>
+          }
+        >
         <Routes>
           <Route path="/" element={<Beranda />} />
           <Route path="/masuk" element={<Masuk />} />
@@ -86,7 +99,15 @@ export default function App() {
           <Route path="/lomba/:id" element={<Detail />} />
           <Route path="/lomba/:id/edit" element={<Wajib><FormLomba /></Wajib>} />
           <Route path="/tersimpan" element={<Wajib><Tersimpan /></Wajib>} />
-          <Route path="*" element={<p className="notice">Halaman tidak ditemukan. <Link to="/">Kembali ke beranda</Link></p>} />
+          <Route
+            path="*"
+            element={
+              <>
+                <h1>Halaman tidak ditemukan</h1>
+                <p className="notice"><Link to="/">Kembali ke beranda</Link></p>
+              </>
+            }
+          />
         </Routes>
         </Suspense>
       </main>

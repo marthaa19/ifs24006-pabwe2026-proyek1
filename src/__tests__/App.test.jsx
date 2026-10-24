@@ -116,3 +116,26 @@ describe('rute yang dilindungi', () => {
     expect(await screen.findByRole('heading', { name: 'Buat akun' })).toBeInTheDocument();
   });
 });
+
+describe('struktur heading (aksesibilitas)', () => {
+  test('halaman Masuk langsung punya satu h1, tanpa menunggu', () => {
+    tampil('/masuk');
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+  });
+
+  test('halaman Daftar langsung punya satu h1, tanpa menunggu', () => {
+    tampil('/daftar');
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+  });
+
+  test('halaman tidak ditemukan punya h1', () => {
+    tampil('/tidak-ada');
+    expect(screen.getByRole('heading', { level: 1, name: 'Halaman tidak ditemukan' })).toBeInTheDocument();
+  });
+
+  test('keadaan memuat tetap punya h1 (Beranda tidak ditunda oleh lazy loading)', async () => {
+    tampil('/');
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(await screen.findByRole('heading', { level: 1, name: 'Deadline terdekat' })).toBeInTheDocument();
+  });
+});
