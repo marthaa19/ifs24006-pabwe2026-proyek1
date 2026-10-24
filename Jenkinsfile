@@ -68,13 +68,7 @@ pipeline {
 
                     echo "=== Running Tests with Coverage ==="
 
-                    if [ -f angular.json ]; then
-                        echo "Framework: Angular"
-                        npx ng test --coverage
-                    else
-                        echo "Framework: React, Next.js, Vue, Nuxt, Svelte, or SvelteKit"
-                        npx vitest run --coverage
-                    fi
+                    npx vitest run --coverage
 
                     echo "=== Tests Passed ==="
                 '''
@@ -217,12 +211,6 @@ pipeline {
                         -x "coverage/*" \
                         -x ".next/*" \
                         -x "out/*" \
-                        -x ".nuxt/*" \
-                        -x ".output/*" \
-                        -x ".svelte-kit/*" \
-                        -x ".angular/*" \
-                        -x "dist/*" \
-                        -x "build/*" \
                         -x ".trivy-cache/*" \
                         -x "latest-app.zip" \
                         -x "trivy-results.sarif" \
