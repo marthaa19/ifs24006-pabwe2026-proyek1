@@ -87,9 +87,9 @@ describe('rute yang dilindungi', () => {
     ['/tersimpan'],
     ['/lomba/baru'],
     ['/lomba/3/edit'],
-  ])('tamu yang membuka %s diarahkan ke halaman Masuk', (path) => {
+  ])('tamu yang membuka %s diarahkan ke halaman Masuk', async (path) => {
     tampil(path);
-    expect(screen.getByRole('heading', { name: 'Masuk' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Masuk' })).toBeInTheDocument();
   });
 
   test('menunggu pemulihan sesi menampilkan "Memuat…" (bukan redirect)', () => {
@@ -111,8 +111,8 @@ describe('rute yang dilindungi', () => {
     expect(await screen.findByRole('heading', { name: 'Tambah lomba' })).toBeInTheDocument();
   });
 
-  test('halaman Daftar dapat dibuka tanpa login', () => {
+  test('halaman Daftar dapat dibuka tanpa login', async () => {
     tampil('/daftar');
-    expect(screen.getByRole('heading', { name: 'Buat akun' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Buat akun' })).toBeInTheDocument();
   });
 });

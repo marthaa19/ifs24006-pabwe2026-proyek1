@@ -1,10 +1,14 @@
+import { lazy, Suspense } from 'react';
 import { NavLink, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 import Beranda from './pages/Beranda.jsx';
-import Detail from './pages/Detail.jsx';
-import FormLomba from './pages/FormLomba.jsx';
-import Tersimpan from './pages/Tersimpan.jsx';
-import { Masuk, Daftar } from './pages/Auth.jsx';
+
+// Halaman selain Beranda dimuat saat dibutuhkan (code splitting) agar JavaScript awal lebih kecil.
+const Detail = lazy(() => import('./pages/Detail.jsx'));
+const FormLomba = lazy(() => import('./pages/FormLomba.jsx'));
+const Tersimpan = lazy(() => import('./pages/Tersimpan.jsx'));
+const Masuk = lazy(() => import('./pages/Auth.jsx').then((m) => ({ default: m.Masuk })));
+const Daftar = lazy(() => import('./pages/Auth.jsx').then((m) => ({ default: m.Daftar })));
 
 function Logo() {
   return (
@@ -73,6 +77,7 @@ export default function App() {
         </div>
       </header>
       <main className="container">
+        <Suspense fallback={<p className="notice" role="status">Memuat…</p>}>
         <Routes>
           <Route path="/" element={<Beranda />} />
           <Route path="/masuk" element={<Masuk />} />
@@ -83,6 +88,7 @@ export default function App() {
           <Route path="/tersimpan" element={<Wajib><Tersimpan /></Wajib>} />
           <Route path="*" element={<p className="notice">Halaman tidak ditemukan. <Link to="/">Kembali ke beranda</Link></p>} />
         </Routes>
+        </Suspense>
       </main>
       <footer className="footer">LombaRadar · Proyek 1 PABWE</footer>
     </>
