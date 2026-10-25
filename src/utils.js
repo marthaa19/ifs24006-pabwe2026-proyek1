@@ -23,7 +23,9 @@ export function infoDeadline(deadline) {
   const sisa = hariTersisa(deadline);
   if (sisa < 0) return { sisa, angka: 'Lewat', label: `${-sisa} hari lalu`, tone: 'past' };
   if (sisa === 0) return { sisa, angka: 'Hari ini', label: 'batas akhir', tone: 'urgent' };
-  const tone = sisa <= 7 ? 'urgent' : sisa <= 14 ? 'soon' : 'calm';
+  let tone = 'calm';
+  if (sisa <= 7) tone = 'urgent';
+  else if (sisa <= 14) tone = 'soon';
   return { sisa, angka: String(sisa), label: 'hari lagi', tone };
 }
 
