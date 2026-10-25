@@ -95,4 +95,14 @@ describe('Tersimpan', () => {
     await waitFor(() => expect(screen.queryByText('Lomba Satu')).not.toBeInTheDocument());
     expect(screen.getByText('Lomba Dua')).toBeInTheDocument();
   });
+
+  test('gagal menghapus menampilkan error dan lomba tetap ada', async () => {
+    api.hapusBookmark.mockRejectedValue(new Error('Gagal menghapus'));
+    const user = userEvent.setup();
+    tampil();
+    await screen.findByText('Lomba Satu');
+    await user.click(screen.getAllByRole('button', { name: 'Hapus dari simpanan' })[0]);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Gagal menghapus');
+    expect(screen.getByText('Lomba Satu')).toBeInTheDocument();
+  });
 });

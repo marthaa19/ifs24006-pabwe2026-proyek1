@@ -38,7 +38,7 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       reportsDirectory: './coverage',
       include: ['src/**/*.{js,jsx}'],
-      exclude: ['src/**/*.test.*', 'src/main.jsx', 'src/setupTests.js', 'src/test-utils.jsx'],
+      exclude: ['src/__tests__/**', 'src/**/*.test.*', 'src/main.jsx', 'src/setupTests.js', 'src/test-utils.jsx'],
     },
   },
 });

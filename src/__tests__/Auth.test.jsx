@@ -1,11 +1,11 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../AuthContext.jsx';
 import { SESI_BERAKHIR } from '../sesi.js';
 import { Masuk, Daftar } from '../pages/Auth.jsx';
-import { api, setToken } from '../api.js';
+import { api, getToken, setToken } from '../api.js';
 
 vi.mock('../api.js', () => ({
   api: { login: vi.fn(), register: vi.fn(), me: vi.fn() },
@@ -138,24 +138,56 @@ describe('halaman Daftar', () => {
   });
 });
 
-describe('sesi berakhir', () => {
-  test('event 401 mengosongkan akun yang sedang masuk', async () => {
-    api.login.mockResolvedValue({ token: 'tok', user: USER });
-    function Status() {
-      const { user, masuk } = useAuth();
-      return (
-        <>
-          <p>{user ? user.nama : 'tamu'}</p>
-          <button onClick={() => masuk('andi@uji.id', 'andi123')}>go</button>
-        </>
-      );
-    }
+describe('sesi akun (AuthProvider)', () => {
+  function Status() {
+    const { user, siap, masuk, keluar } = useAuth();
+    return (
+      <>
+        <p>{siap ? (user ? user.nama : 'tamu') : 'menunggu'}</p>
+        <button onClick={() => masuk('andi@uji.id', 'andi123')}>masuk</button>
+        <button onClick={keluar}>keluar</button>
+      </>
+    );
+  }
+  const tampilStatus = () =>
     render(
       <AuthProvider>
         <Status />
       </AuthProvider>
     );
-    await userEvent.setup().click(screen.getByRole('button', { name: 'go' }));
+
+  afterEach(() => getToken.mockReturnValue(null));
+
+  test('token tersimpan yang valid memulihkan akun', async () => {
+    getToken.mockReturnValue('tok');
+    api.me.mockResolvedValue(USER);
+    tampilStatus();
+    expect(await screen.findByText('Andi')).toBeInTheDocument();
+  });
+
+  test('token tersimpan yang ditolak server dihapus dan pengguna menjadi tamu', async () => {
+    getToken.mockReturnValue('tok');
+    api.me.mockRejectedValue(new Error('Token tidak valid'));
+    tampilStatus();
+    expect(await screen.findByText('tamu')).toBeInTheDocument();
+    expect(setToken).toHaveBeenCalledWith(null);
+  });
+
+  test('keluar mengosongkan akun dan token', async () => {
+    api.login.mockResolvedValue({ token: 'tok', user: USER });
+    const user = userEvent.setup();
+    tampilStatus();
+    await user.click(screen.getByRole('button', { name: 'masuk' }));
+    expect(await screen.findByText('Andi')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'keluar' }));
+    expect(screen.getByText('tamu')).toBeInTheDocument();
+    expect(setToken).toHaveBeenLastCalledWith(null);
+  });
+
+  test('event sesi berakhir (401) mengosongkan akun yang sedang masuk', async () => {
+    api.login.mockResolvedValue({ token: 'tok', user: USER });
+    tampilStatus();
+    await userEvent.setup().click(screen.getByRole('button', { name: 'masuk' }));
     expect(await screen.findByText('Andi')).toBeInTheDocument();
     act(() => {
       window.dispatchEvent(new Event(SESI_BERAKHIR));
