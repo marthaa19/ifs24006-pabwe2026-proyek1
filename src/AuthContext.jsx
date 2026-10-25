@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { api, getToken, setToken } from './api.js';
 import { SESI_BERAKHIR } from './sesi.js';
@@ -36,3 +37,7 @@ export function AuthProvider({ children }) {
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node,
+};

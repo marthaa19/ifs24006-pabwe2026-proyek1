@@ -21,7 +21,7 @@ export default function FilterBar({ pencarian, onCari, filters, onUbah, kategori
         <Select aria-label="Tingkat" kosong="Semua tingkat" options={TINGKAT} {...pilih('tingkat')} />
         <Select aria-label="Urutan" options={URUTAN} {...pilih('sort')} />
       </div>
-      <div className="segmented" role="group" aria-label="Status lomba">
+      <fieldset className="segmented" aria-label="Status lomba">
         {STATUS.map((s) => (
           <button
             key={s.label}
@@ -33,7 +33,7 @@ export default function FilterBar({ pencarian, onCari, filters, onUbah, kategori
             {s.label}
           </button>
         ))}
-      </div>
+      </fieldset>
     </section>
   );
 }

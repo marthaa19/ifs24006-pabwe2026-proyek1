@@ -27,7 +27,7 @@ async function request(path, options = {}) {
     globalThis.dispatchEvent(new Event(SESI_BERAKHIR));
     throw new Error('Sesi berakhir. Silakan masuk lagi.');
   }
-  if (!res.ok) throw new Error((data && data.error) || `Permintaan gagal (${res.status})`);
+  if (!res.ok) throw new Error(data?.error || `Permintaan gagal (${res.status})`);
   return data;
 }
 

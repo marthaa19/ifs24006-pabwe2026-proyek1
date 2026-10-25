@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatTanggal, infoDeadline } from '../utils.js';
 
@@ -14,6 +15,10 @@ function BookmarkIcon({ filled }) {
     </svg>
   );
 }
+
+BookmarkIcon.propTypes = {
+  filled: PropTypes.bool,
+};
 
 export default function LombaRow({ lomba, onToggle, children }) {
   const d = infoDeadline(lomba.deadline);
@@ -58,3 +63,20 @@ export default function LombaRow({ lomba, onToggle, children }) {
     </article>
   );
 }
+
+LombaRow.propTypes = {
+  lomba: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    judul: PropTypes.string.isRequired,
+    penyelenggara: PropTypes.string,
+    kategori_nama: PropTypes.string,
+    tingkat: PropTypes.string,
+    mode: PropTypes.string,
+    biaya: PropTypes.string,
+    hadiah: PropTypes.string,
+    deadline: PropTypes.string.isRequired,
+    tersimpan: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+  }).isRequired,
+  onToggle: PropTypes.func,
+  children: PropTypes.node,
+};

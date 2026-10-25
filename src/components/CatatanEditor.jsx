@@ -29,7 +29,7 @@ export default function CatatanEditor({ lomba, onHapus }) {
       <div className="catatan__actions">
         <button type="button" className="btn btn--small" onClick={simpanCatatan}>Simpan catatan</button>
         <button type="button" className="btn btn--small btn--ghost" onClick={() => onHapus(lomba)}>Hapus dari simpanan</button>
-        {status && <span className="catatan__status" role="status">{status}</span>}
+        {status && <output className="catatan__status">{status}</output>}
       </div>
     </div>
   );
