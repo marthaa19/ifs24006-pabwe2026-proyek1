@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 import Field from '../components/Field.jsx';
@@ -47,6 +48,8 @@ function Bentuk({ daftar }) {
     </>
   );
 }
+
+Bentuk.propTypes = { daftar: PropTypes.bool.isRequired };
 
 export const Masuk = () => <Bentuk daftar={false} />;
 export const Daftar = () => <Bentuk daftar />;

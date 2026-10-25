@@ -16,8 +16,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const keluar = () => setUser(null);
-    window.addEventListener(SESI_BERAKHIR, keluar);
-    return () => window.removeEventListener(SESI_BERAKHIR, keluar);
+    globalThis.addEventListener(SESI_BERAKHIR, keluar);
+    return () => globalThis.removeEventListener(SESI_BERAKHIR, keluar);
   }, []);
 
   const value = useMemo(() => {

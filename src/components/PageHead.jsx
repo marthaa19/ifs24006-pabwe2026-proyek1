@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function PageHead({ judul, children }) {
   return (
     <section className="pagehead">
@@ -6,3 +8,5 @@ export default function PageHead({ judul, children }) {
     </section>
   );
 }
+
+PageHead.propTypes = { judul: PropTypes.string.isRequired, children: PropTypes.node };

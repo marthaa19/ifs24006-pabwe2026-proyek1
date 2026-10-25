@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useBookmark } from '../hooks/useBookmark.js';
 
@@ -33,3 +34,8 @@ export default function CatatanEditor({ lomba, onHapus }) {
     </div>
   );
 }
+
+CatatanEditor.propTypes = {
+  lomba: PropTypes.shape({ id: PropTypes.number.isRequired, catatan: PropTypes.string }).isRequired,
+  onHapus: PropTypes.func.isRequired,
+};

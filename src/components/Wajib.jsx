@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 import { Memuat } from './Status.jsx';
@@ -10,3 +11,5 @@ export default function Wajib({ children }) {
   if (!user) return <Navigate to="/masuk" replace state={{ dari: lokasi.pathname }} />;
   return children;
 }
+
+Wajib.propTypes = { children: PropTypes.node.isRequired };

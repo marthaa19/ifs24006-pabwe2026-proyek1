@@ -24,7 +24,7 @@ export default function Detail() {
   }
 
   async function hapus() {
-    if (!window.confirm(`Hapus lomba "${lomba.judul}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+    if (!globalThis.confirm(`Hapus lomba "${lomba.judul}"? Tindakan ini tidak bisa dibatalkan.`)) return;
     if (await jaga(() => api.hapusLomba(lomba.id))) navigate('/');
   }
 

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Select } from './Field.jsx';
 import { STATUS, TINGKAT, URUTAN, opsiKategori } from '../constants.js';
 
@@ -36,3 +37,16 @@ export default function FilterBar({ pencarian, onCari, filters, onUbah, kategori
     </section>
   );
 }
+
+FilterBar.propTypes = {
+  pencarian: PropTypes.string.isRequired,
+  onCari: PropTypes.func.isRequired,
+  onUbah: PropTypes.func.isRequired,
+  filters: PropTypes.shape({
+    kategori: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    tingkat: PropTypes.string,
+    status: PropTypes.string,
+    sort: PropTypes.string,
+  }).isRequired,
+  kategori: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.number, nama: PropTypes.string })).isRequired,
+};

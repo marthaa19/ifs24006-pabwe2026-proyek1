@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -29,3 +30,9 @@ export default function BookmarkPanel({ tersimpan, onSimpan, onLepas }) {
     </section>
   );
 }
+
+BookmarkPanel.propTypes = {
+  tersimpan: PropTypes.bool.isRequired,
+  onSimpan: PropTypes.func.isRequired,
+  onLepas: PropTypes.func.isRequired,
+};

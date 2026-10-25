@@ -24,7 +24,7 @@ async function request(path, options = {}) {
   // Token kedaluwarsa/tidak valid: hapus sesi dan beri tahu aplikasi (kecuali pada login/daftar).
   if (res.status === 401 && getToken() && !path.startsWith('/auth/')) {
     setToken(null);
-    window.dispatchEvent(new Event(SESI_BERAKHIR));
+    globalThis.dispatchEvent(new Event(SESI_BERAKHIR));
     throw new Error('Sesi berakhir. Silakan masuk lagi.');
   }
   if (!res.ok) throw new Error((data && data.error) || `Permintaan gagal (${res.status})`);

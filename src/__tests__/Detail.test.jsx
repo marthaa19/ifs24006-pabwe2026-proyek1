@@ -144,7 +144,7 @@ describe('Detail lomba', () => {
 
     test('hapus dengan konfirmasi "OK" memanggil API lalu kembali ke beranda', async () => {
       useAuth.mockReturnValue({ user: { id: 7, role: 'mahasiswa' } });
-      const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
+      const confirm = vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
       const user = userEvent.setup();
       tampil();
       await user.click(await screen.findByRole('button', { name: 'Hapus lomba' }));
@@ -155,7 +155,7 @@ describe('Detail lomba', () => {
 
     test('hapus dibatalkan jika konfirmasi ditolak', async () => {
       useAuth.mockReturnValue({ user: { id: 7, role: 'mahasiswa' } });
-      vi.spyOn(window, 'confirm').mockReturnValue(false);
+      vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
       const user = userEvent.setup();
       tampil();
       await user.click(await screen.findByRole('button', { name: 'Hapus lomba' }));
@@ -165,7 +165,7 @@ describe('Detail lomba', () => {
 
     test('hapus yang ditolak server menampilkan error', async () => {
       useAuth.mockReturnValue({ user: { id: 7, role: 'mahasiswa' } });
-      vi.spyOn(window, 'confirm').mockReturnValue(true);
+      vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
       api.hapusLomba.mockRejectedValue(new Error('Kamu hanya bisa menghapus lomba yang kamu tambahkan'));
       const user = userEvent.setup();
       tampil();

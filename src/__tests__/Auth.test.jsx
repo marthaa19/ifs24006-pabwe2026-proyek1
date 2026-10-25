@@ -190,7 +190,7 @@ describe('sesi akun (AuthProvider)', () => {
     await userEvent.setup().click(screen.getByRole('button', { name: 'masuk' }));
     expect(await screen.findByText('Andi')).toBeInTheDocument();
     act(() => {
-      window.dispatchEvent(new Event(SESI_BERAKHIR));
+      globalThis.dispatchEvent(new Event(SESI_BERAKHIR));
     });
     expect(screen.getByText('tamu')).toBeInTheDocument();
   });
