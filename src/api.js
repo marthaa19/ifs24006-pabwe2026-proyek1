@@ -1,3 +1,5 @@
+import { SESI_BERAKHIR } from './sesi.js';
+
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const getToken = () => { try { return localStorage.getItem('lr_token'); } catch { return null; } };
@@ -18,6 +20,12 @@ async function request(path, options = {}) {
     data = await res.json();
   } catch {
     /* respons kosong */
+  }
+  // Token kedaluwarsa/tidak valid: hapus sesi dan beri tahu aplikasi (kecuali pada login/daftar).
+  if (res.status === 401 && getToken() && !path.startsWith('/auth/')) {
+    setToken(null);
+    window.dispatchEvent(new Event(SESI_BERAKHIR));
+    throw new Error('Sesi berakhir. Silakan masuk lagi.');
   }
   if (!res.ok) throw new Error((data && data.error) || `Permintaan gagal (${res.status})`);
   return data;

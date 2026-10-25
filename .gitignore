@@ -1,5 +1,10 @@
 node_modules/
 dist/
-.env
-
+coverage/
 test-results/
+.trivy-cache/
+trivy-results.sarif
+latest-app.zip
+.env
+.env.local
+*.log

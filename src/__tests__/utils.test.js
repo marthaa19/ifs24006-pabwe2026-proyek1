@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { formatTanggal, hariTersisa, infoDeadline } from '../utils.js';
+import { formatTanggal, hariTersisa, infoDeadline, urlAman } from '../utils.js';
 import { bekukanTanggal } from '../test-utils.jsx';
 
 beforeEach(bekukanTanggal); // hari ini = 24 Oktober 2026
@@ -47,5 +47,18 @@ describe('infoDeadline', () => {
 
   test('lebih dari 14 hari: calm', () => {
     expect(infoDeadline('2026-11-08')).toMatchObject({ sisa: 15, angka: '15', tone: 'calm' });
+  });
+});
+
+describe('urlAman', () => {
+  test('menerima http dan https', () => {
+    expect(urlAman('https://example.com/daftar')).toBe(true);
+    expect(urlAman('http://example.com')).toBe(true);
+  });
+
+  test('menolak protokol lain dan teks yang bukan URL', () => {
+    for (const x of ['javascript:alert(1)', 'data:text/html,x', 'ftp://example.com', 'bukan url', '', null]) {
+      expect(urlAman(x)).toBe(false);
+    }
   });
 });

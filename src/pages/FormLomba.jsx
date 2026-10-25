@@ -8,6 +8,7 @@ import { BIAYA, MODE, TINGKAT, opsiKategori } from '../constants.js';
 import { useAsync } from '../hooks/useAsync.js';
 import { useForm } from '../hooks/useForm.js';
 import { useSubmit } from '../hooks/useSubmit.js';
+import { urlAman } from '../utils.js';
 
 const KOSONG = {
   judul: '',
@@ -41,6 +42,9 @@ export default function FormLomba() {
   }, [lomba, setValues]);
 
   const { onSubmit, loading, error: galatKirim } = useSubmit(async () => {
+    if (form.link_pendaftaran && !urlAman(form.link_pendaftaran)) {
+      throw new Error('Link pendaftaran harus berupa alamat http:// atau https://');
+    }
     const payload = { ...form, kategori_id: Number(form.kategori_id) };
     const hasil = edit ? await api.ubahLomba(id, payload) : await api.tambahLomba(payload);
     navigate(`/lomba/${hasil.id}`);

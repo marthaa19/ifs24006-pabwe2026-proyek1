@@ -1,8 +1,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from '../AuthContext.jsx';
+import { AuthProvider, useAuth } from '../AuthContext.jsx';
+import { SESI_BERAKHIR } from '../sesi.js';
 import { Masuk, Daftar } from '../pages/Auth.jsx';
 import { api, setToken } from '../api.js';
 
@@ -134,5 +135,31 @@ describe('halaman Daftar', () => {
     await user.type(screen.getByLabelText('Kata sandi'), 'andi123');
     await user.click(screen.getByRole('button', { name: 'Buat akun' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Email sudah terdaftar');
+  });
+});
+
+describe('sesi berakhir', () => {
+  test('event 401 mengosongkan akun yang sedang masuk', async () => {
+    api.login.mockResolvedValue({ token: 'tok', user: USER });
+    function Status() {
+      const { user, masuk } = useAuth();
+      return (
+        <>
+          <p>{user ? user.nama : 'tamu'}</p>
+          <button onClick={() => masuk('andi@uji.id', 'andi123')}>go</button>
+        </>
+      );
+    }
+    render(
+      <AuthProvider>
+        <Status />
+      </AuthProvider>
+    );
+    await userEvent.setup().click(screen.getByRole('button', { name: 'go' }));
+    expect(await screen.findByText('Andi')).toBeInTheDocument();
+    act(() => {
+      window.dispatchEvent(new Event(SESI_BERAKHIR));
+    });
+    expect(screen.getByText('tamu')).toBeInTheDocument();
   });
 });

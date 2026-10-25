@@ -6,7 +6,7 @@ import { Galat, Memuat } from '../components/Status.jsx';
 import { useAsync } from '../hooks/useAsync.js';
 import { useBookmark } from '../hooks/useBookmark.js';
 import { useGuard } from '../hooks/useGuard.js';
-import { formatTanggal, infoDeadline } from '../utils.js';
+import { formatTanggal, infoDeadline, urlAman } from '../utils.js';
 
 export default function Detail() {
   const { id } = useParams();
@@ -75,7 +75,7 @@ export default function Detail() {
         ))}
       </dl>
 
-      {lomba.link_pendaftaran && (
+      {urlAman(lomba.link_pendaftaran) && (
         <p>
           <a className="btn" href={lomba.link_pendaftaran} target="_blank" rel="noopener noreferrer">
             Buka halaman pendaftaran

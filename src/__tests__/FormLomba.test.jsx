@@ -92,6 +92,21 @@ describe('FormLomba: tambah', () => {
     expect(screen.getByRole('button', { name: 'Simpan lomba' })).toBeEnabled();
   });
 
+  test('link pendaftaran non-http(s) ditolak sebelum dikirim', async () => {
+    const user = userEvent.setup();
+    tampil('/lomba/baru');
+    await screen.findByRole('option', { name: 'Programming' });
+    await user.type(screen.getByLabelText('Judul lomba'), 'L');
+    await user.type(screen.getByLabelText('Penyelenggara'), 'P');
+    await user.selectOptions(screen.getByLabelText('Kategori'), '1');
+    fireEvent.change(screen.getByLabelText('Deadline pendaftaran'), { target: { value: '2026-12-31' } });
+    fireEvent.change(screen.getByLabelText('Link pendaftaran'), { target: { value: 'javascript:alert(1)' } });
+    await user.click(screen.getByRole('button', { name: 'Simpan lomba' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('http:// atau https://');
+    expect(api.tambahLomba).not.toHaveBeenCalled();
+  });
+
   test('tautan Batal kembali ke beranda', async () => {
     tampil('/lomba/baru');
     await screen.findByRole('option', { name: 'Programming' });

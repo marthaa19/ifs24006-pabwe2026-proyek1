@@ -69,6 +69,13 @@ describe('Detail lomba', () => {
     expect(screen.queryByRole('link', { name: 'Buka halaman pendaftaran' })).not.toBeInTheDocument();
   });
 
+  test('link pendaftaran dengan protokol berbahaya tidak ditampilkan', async () => {
+    api.getLombaById.mockResolvedValue(lombaContoh({ link_pendaftaran: 'javascript:alert(1)' }));
+    tampil();
+    await screen.findByRole('heading', { name: 'Hackathon Nasional' });
+    expect(screen.queryByRole('link', { name: 'Buka halaman pendaftaran' })).not.toBeInTheDocument();
+  });
+
   test('lomba tidak ditemukan menampilkan pesan error dan tautan kembali', async () => {
     api.getLombaById.mockRejectedValue(new Error('Lomba tidak ditemukan'));
     tampil();

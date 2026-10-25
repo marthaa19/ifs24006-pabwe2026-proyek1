@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { api, getToken, setToken } from './api.js';
+import { SESI_BERAKHIR } from './sesi.js';
 
 const Ctx = createContext(null);
 export const useAuth = () => useContext(Ctx);
@@ -11,6 +12,12 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!getToken()) return;
     api.me().then(setUser).catch(() => setToken(null)).finally(() => setSiap(true));
+  }, []);
+
+  useEffect(() => {
+    const keluar = () => setUser(null);
+    window.addEventListener(SESI_BERAKHIR, keluar);
+    return () => window.removeEventListener(SESI_BERAKHIR, keluar);
   }, []);
 
   const value = useMemo(() => {

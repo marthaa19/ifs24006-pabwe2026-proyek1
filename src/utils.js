@@ -26,3 +26,13 @@ export function infoDeadline(deadline) {
   const tone = sisa <= 7 ? 'urgent' : sisa <= 14 ? 'soon' : 'calm';
   return { sisa, angka: String(sisa), label: 'hari lagi', tone };
 }
+
+// Tautan eksternal hanya boleh http/https (menolak javascript:, data:, dan sejenisnya).
+export function urlAman(str) {
+  try {
+    const { protocol } = new URL(str);
+    return protocol === 'http:' || protocol === 'https:';
+  } catch {
+    return false;
+  }
+}

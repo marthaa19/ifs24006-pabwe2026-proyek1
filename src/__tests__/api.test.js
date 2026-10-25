@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { api, getToken, setToken } from '../api.js';
+import { SESI_BERAKHIR } from '../sesi.js';
 
 const BASE = 'http://localhost:3000/api';
 
@@ -46,6 +47,24 @@ describe('request', () => {
     fetch.mockReturnValue(balas(200, {}));
     await api.me();
     expect(fetch.mock.calls[0][1].headers.Authorization).toBe('Bearer tok123');
+  });
+
+  test('401 pada sesi aktif menghapus token dan memberi tahu aplikasi', async () => {
+    setToken('lama');
+    const dengar = vi.fn();
+    window.addEventListener(SESI_BERAKHIR, dengar);
+    fetch.mockReturnValue(balas(401, { error: 'Token tidak valid' }));
+    await expect(api.getBookmark()).rejects.toThrow('Sesi berakhir');
+    expect(getToken()).toBeNull();
+    expect(dengar).toHaveBeenCalledTimes(1);
+    window.removeEventListener(SESI_BERAKHIR, dengar);
+  });
+
+  test('401 pada login tidak dianggap sesi berakhir', async () => {
+    setToken('lama');
+    fetch.mockReturnValue(balas(401, { error: 'Email atau kata sandi salah' }));
+    await expect(api.login({})).rejects.toThrow('Email atau kata sandi salah');
+    expect(getToken()).toBe('lama');
   });
 
   test('mengembalikan data JSON', async () => {
